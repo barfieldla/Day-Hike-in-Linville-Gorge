@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset=utf-8 />
+	<title>Day Hike in Linville Gorge</title>
+	<meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.css" />
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.1/dist/leaflet.css" />
+	<link href="https://fonts.googleapis.com/css?family=Noto+Sans" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Lora" rel="stylesheet">
+
+  <style>
+
+    title {
+      text-align:right
+    }
+
+    body {
+			margin: 0;
+			padding: 0;
+			background: "whitesmoke";
+			font-family: "Monaco", monospace;
+			color: #3d3d3d;
+		}
+
+		h1 {
+			position: absolute;
+			margin-top: 0;
+			top: 20px;
+			right: 30px;
+			font-size: 2.4em;
+			font-family: "Monaco", monospace;
+			letter-spacing: .03em;
+			padding: 10px 10px;
+			background: rgba(256, 256, 256);
+			border: 1px solid grey;
+			border-radius: 12px;
+			z-index: 800;
+		}
+
+		h2 {
+			font-family: "Monaco", monospace;
+			letter-spacing: .04em;
+      text-decoration: underline;
+		}
+
+		#map {
+			position: absolute;
+			top: 0;
+			bottom: 0;
+			width: 100%;
+		}
+
+		section {
+			position: absolute;
+			bottom: 0;
+			left: 10px;
+			width: 350px;
+			margin: 20px auto;
+			padding: 0 15px;
+			background: rgba(256, 256, 256);
+			border: 1px solid grey;
+			border-radius: 12px;
+			z-index: 800;
+		}
+
+		p {
+			font-size: .9em;
+      font-family: "Monaco", monospace;
+			line-height: 1.3em;
+		}
+
+    p2 {
+      font-size: .7em;
+      font-family: "Monaco", monospace;
+      line-height: 1.3em;
+    }
+
+
+		a {
+			color: #005daa;
+			text-decoration: none;
+		}
+
+		a:hover {
+			text-decoration: underline;
+		}
+
+
+  </style>
+
+</head>
+
+<body>
+
+    <h1>Day Hike in Linville Gorge</h1>
+
+    <div id='map'></div>
+
+	<section>
+		<h2>Pine Gap to Babel Tower</h2>
+
+    <p> The hike begins at Pine Gap, which is also the trailhead for the Linville Gorge Trail - a long, strenuous loop lasting 28.6 miles. We will follow this trail for a bit, but turn at Babel Tower Trail to see the Overlook before turning back. </p>
+
+    <p> Along this route, we cross paths with the Bynum Bluff Trail that would take you down to Linville River. Further along, the hike also intersects with the end of Brushy Ridge Trail, which is a great stop to see some waterfalls, then the end of Cabin Trail. </p>
+    <p> After a few miles with some decent elevation change, we reach Babel Tower Overlook with incredible views of the Linville Gorge itself and the Linville River.</p>
+    <p2> Text provided by <a href="https://www.alltrails.com/parks/us/north-carolina/linville-gorge-wilderness?search=true">AllTrails</a></p2><br>
+    <p2> Map authored by Lauren Barfield </p2>
+  </section>
+
+  <script src="http://code.jquery.com/jquery-3.1.1.min.js"></script>
+	<script src="https://unpkg.com/leaflet@1.0.1/dist/leaflet.js"></script>
+  <script src="data/route2.js"></script>
+
+	<script>
+
+    var options = {
+    center: [36.08403, -81.83015],
+    zoom: 16
+  }
+
+console.log(data);
+
+  	var map = L.map('map', options);
+
+    var Esri_WorldTopoMap = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
+    	attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap, iPC, USGS, FAO, NPS, NRCAN, GeoBase, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), and the GIS User Community'
+    }).addTo(map);
+
+
+
+    var myRoute = L.geoJSON(data, {
+        filter: function(feature) {
+          if(feature.geometry.type == "LineString") {
+            return feature;
+          }
+        },
+
+        style: function(feature) {
+          return {
+            color: "#702963",
+            weight: 4,
+            opacity: 0.7,
+            dashArray: "6, 6"
+          }
+        }
+      }).addTo(map);
+
+var myStops = L.geoJSON(data, {
+        filter: function(feature) {
+          if(feature.geometry.type == "Point") {
+            return feature;
+          }
+        },
+
+        onEachFeature: function(feature, layer) {
+        layer.bindTooltip(feature.properties.name)
+      }
+
+    }).addTo(map);
+
+
+
+
+map.fitBounds(myRoute.getBounds());
+
+
+    </script>
+
+</body>
+
+</html>
